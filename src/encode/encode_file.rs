@@ -1,6 +1,6 @@
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result};
 use colored::Colorize;
-use image::{Rgb, open};
+use image::{Rgb, imageops, open};
 use std::fs;
 
 // pub fn handle(args: EncodeArgs, source: Source) {
@@ -13,9 +13,28 @@ pub fn encode(image: String, path: String, file: String) -> Result<()> {
     let file = fs::read(file)?;
 
     let (width, height) = &image.dimensions();
-
     if (file.len() as u32 * 2) > (width * height - 2) {
-        bail!("The file is too big, please try with a different image")
+        println!(
+            "{}",
+            "Resizing image in order to be able to fit the file. Still very buggy so might not work".blue()
+        );
+
+        let target_pixels: f64 = (file.len() + 5) as f64 * 2.0;
+
+        let aspect = *width as f64 / *height as f64;
+        let side = target_pixels.sqrt() as u32;
+        let target_height = side;
+        let target_width = side * aspect as u32;
+        println!(
+            "Debug: aspect: {}, height: {}, width: {}",
+            aspect, target_height, target_width
+        );
+        image = imageops::resize(
+            &image,
+            target_width,
+            target_height,
+            imageops::FilterType::Triangle,
+        );
     }
 
     let mut curr_half = 0;

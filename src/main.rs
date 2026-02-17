@@ -1,7 +1,6 @@
 mod cli;
 mod decode;
 mod encode;
-mod utils;
 
 use clap::Parser;
 use cli::Cli;
