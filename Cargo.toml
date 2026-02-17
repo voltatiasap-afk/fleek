@@ -7,7 +7,7 @@ license = "MIT"
 description = "Image steganography tool"
 repository = "https://github.com/voltatiasap-afk/fleek"
 keywords = ["steganography", "image"]
-categories = ["command-line-utilities", "clis"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 anyhow = "1.0.101"
