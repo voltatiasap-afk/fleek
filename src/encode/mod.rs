@@ -1,9 +1,8 @@
-mod encode_file;
-mod encode_text;
+mod generic_encode;
 use crate::cli::*;
 use anyhow::Result;
-use encode_file::encode;
-use encode_text::encode_text;
+use generic_encode::file_encode;
+use generic_encode::text_encode;
 
 pub fn handle(args: EncodeArgs) -> Result<()> {
     let carrier = args.carrier;
@@ -14,11 +13,11 @@ pub fn handle(args: EncodeArgs) -> Result<()> {
     // }
     match (&args.text, &args.file) {
         (Some(text), None) => {
-            encode_text(carrier, path, text.clone())?;
+            text_encode(carrier, path, text.clone())?;
             Ok(())
         }
         (None, Some(file)) => {
-            encode(carrier, path, file.clone())?;
+            file_encode(carrier, path, file.clone())?;
             Ok(())
         }
         _ => unreachable!(),

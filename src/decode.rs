@@ -17,6 +17,8 @@ fn decode(image: String) -> Result<()> {
         let mut curr_half = 0;
         let mut bytes: Vec<u8> = Vec::new();
         let mut byte = 0u8;
+        let mut len_bytes = Vec::new();
+        let mut length: Option<u32> = None;
         for (_, _, pixel) in image.enumerate_pixels() {
             let Rgb([r, g, b]) = *pixel;
 
@@ -24,14 +26,16 @@ fn decode(image: String) -> Result<()> {
                 continue;
             }
 
-            if (r, g, b) == (33, 33, 33) {
+            if let Some(len) = length
+                && bytes.len() as u32 >= len
+            // && len_bytes.len() == 4
+            {
                 break;
             }
 
             if curr_half == 0 {
                 let high = (r & 0b00000011) << 6;
                 let low = (b & 0b00000011) << 4;
-
                 curr_half = 1;
                 byte = high | low;
             } else {
@@ -41,18 +45,21 @@ fn decode(image: String) -> Result<()> {
                 curr_half = 0;
                 byte |= high | low;
 
-                bytes.push(byte);
-                byte = 0u8;
+                if len_bytes.len() < 4 {
+                    len_bytes.push(byte);
+                } else {
+                    let length_array: [u8; 4] = len_bytes.clone().try_into().unwrap();
+                    length = Some(u32::from_le_bytes(length_array));
+                    bytes.push(byte);
+                    byte = 0u8;
+                }
             }
         }
         let file_type = infer::get(&bytes);
-        // if bytes.len() % 2 == 1 {
-        //     bytes.pop();
-        // }
         match file_type {
             Some(p) => {
-                std::fs::write(format!("output.{}", p.extension()), bytes)?;
-                println!("Saved to {}.{}", "output".blue(), p.extension().blue());
+                std::fs::write(format!("output.{}", p.extension()), &bytes)?;
+                println!("Saved to {}.{}", "output".blue(), p.extension().blue(),);
             }
             None => {
                 let text = String::from_utf8_lossy(&bytes);
