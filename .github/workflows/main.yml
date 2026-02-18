@@ -1,0 +1,35 @@
+name: Build fleek
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: fleek-linux
+          - os: windows-latest  
+            artifact: fleek-windows
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+    
+    - name: Build release binary
+      run: cargo build --release --bin celo
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact }}
+        path: |
+          target/release/fleek
+          target/release/fleek.exe
+        retention-days: 30
