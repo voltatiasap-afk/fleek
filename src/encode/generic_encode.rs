@@ -1,7 +1,9 @@
 use anyhow::{Context, Result};
 use colored::Colorize;
+use flate2::{Compression, write::DeflateEncoder};
 use image::{Rgb, imageops, open};
 use std::fs;
+use std::io::prelude::*;
 
 // pub fn handle(args: EncodeArgs, source: Source) {
 //     let bits = args.bits;
@@ -20,7 +22,13 @@ pub fn file_encode(image: String, path: String, file: String) -> Result<()> {
 fn encode(image: String, path: String, mut data: Vec<u8>) -> Result<()> {
     let mut image = open(image)?.to_rgb8();
 
+    let mut encoder = DeflateEncoder::new(Vec::new(), Compression::best());
+
+    encoder.write_all(&data)?;
+
+    data = encoder.finish()?;
     let data_len = (data.len() as u32).to_le_bytes();
+
     data.splice(0..0, data_len);
 
     let (width, height) = &image.dimensions();
@@ -53,7 +61,6 @@ fn encode(image: String, path: String, mut data: Vec<u8>) -> Result<()> {
         let Rgb([r, g, b]) = *pixel;
 
         if curr_byte >= data.len() {
-            println!("Breaking");
             break;
         }
 

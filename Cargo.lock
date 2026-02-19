@@ -1125,6 +1125,7 @@ dependencies = [
  "cargo",
  "clap",
  "colored",
+ "flate2",
  "image",
  "infer",
 ]

@@ -1,6 +1,8 @@
 use anyhow::Result;
 use colored::Colorize;
+use flate2::read::DeflateDecoder;
 use image::{Rgb, open};
+use std::io::prelude::*;
 
 use crate::cli::DecodeArgs;
 
@@ -55,6 +57,12 @@ fn decode(image: String) -> Result<()> {
                 }
             }
         }
+        let mut decoder = DeflateDecoder::new(&bytes[..]);
+        let mut decompressed = Vec::new();
+
+        decoder.read_to_end(&mut decompressed)?;
+        bytes = decompressed;
+
         let file_type = infer::get(&bytes);
         match file_type {
             Some(p) => {
