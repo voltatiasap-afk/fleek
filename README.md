@@ -3,8 +3,10 @@
 sleek steganography tool written in rust
 
 <p align="center">
-  <img src="demo.gif" alt="fleek demo" width="700">
+  <img src="demo.gif" alt="fleek demo" width="1100" height="800" style="border-radius: 30px;">
 </p>
+
+
 
 ## Usage
 
