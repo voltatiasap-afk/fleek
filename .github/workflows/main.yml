@@ -23,7 +23,7 @@ jobs:
       uses: dtolnay/rust-toolchain@stable
     
     - name: Build release binary
-      run: cargo build --release --bin celo
+      run: cargo build --release --bin fleek
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
