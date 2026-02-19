@@ -1,11 +1,13 @@
 # fleek
+
 sleek steganography tool written in rust
 
 <p align="center">
-  <img src="showcase.gif" alt="fleek demo" width="700">
+  <img src="demo.gif" alt="fleek demo" width="700">
 </p>
 
 ## Usage
+
 ```text
 Image steganography tool
 
@@ -22,11 +24,13 @@ Options:
 ```
 
 ### Encoding a file (of any format)
+
 ```bash
 fleek encode -c carrier.png -f file.zip
 ```
 
 ## Decoding
+
 ```bash
 fleek decode -i image.png
 ```
