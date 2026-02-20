@@ -1,4 +1,4 @@
-use clap::{Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand, ValueEnum};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -25,7 +25,7 @@ pub struct DecodeArgs {
 #[derive(Args)]
 pub struct EncodeArgs {
     #[arg(short, long)]
-    pub carrier: String,
+    pub mask: String,
 
     #[arg(short, long, default_value = "output.png")]
     pub output: String,
@@ -35,7 +35,10 @@ pub struct EncodeArgs {
     pub text: Option<String>,
 
     #[arg(short, long, conflicts_with = "text")]
-    pub file: Option<String>, // pub source: Source,
+    pub file: Option<String>,
+
+    #[arg(short, long, default_value = "0", value_parser = clap::value_parser!(u32).range(0..=10))]
+    pub compression: u32,
 }
 
 #[derive(Subcommand)]

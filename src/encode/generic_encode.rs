@@ -9,20 +9,20 @@ use std::io::prelude::*;
 //     let bits = args.bits;
 // }
 
-pub fn text_encode(image: String, path: String, text: String) -> Result<()> {
+pub fn text_encode(image: String, path: String, text: String, compression: u32) -> Result<()> {
     let text_bytes = text.as_bytes().to_vec();
-    encode(image, path, text_bytes)
+    encode(image, path, text_bytes, compression)
 }
 
-pub fn file_encode(image: String, path: String, file: String) -> Result<()> {
+pub fn file_encode(image: String, path: String, file: String, compression: u32) -> Result<()> {
     let file_bytes = fs::read(file)?;
-    encode(image, path, file_bytes)
+    encode(image, path, file_bytes, compression)
 }
 
-fn encode(image: String, path: String, mut data: Vec<u8>) -> Result<()> {
+fn encode(image: String, path: String, mut data: Vec<u8>, compression: u32) -> Result<()> {
     let mut image = open(image)?.to_rgb8();
 
-    let mut encoder = DeflateEncoder::new(Vec::new(), Compression::best());
+    let mut encoder = DeflateEncoder::new(Vec::new(), Compression::new(compression));
 
     encoder.write_all(&data)?;
 
