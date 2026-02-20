@@ -1,12 +1,6 @@
 # fleek
 
-sleek steganography tool written in rust
-
-<p align="center">
-  <img src="demo.gif" alt="fleek demo" width="1100" height="800" style="border-radius: 30px;">
-</p>
-
-
+sleek steganography tool for images written in rust
 
 ## Usage
 
@@ -28,11 +22,19 @@ Options:
 ### Encoding a file (of any format)
 
 ```bash
-fleek encode -c carrier.png -f file.zip
+fleek encode -m carrier.png -f file.zip -c 5
 ```
 
-## Decoding
+### Decoding
 
 ```bash
 fleek decode -i image.png
 ```
+
+## Try it
+
+```bash
+fleek decode -i assets/source.png
+```
+
+This image contains the whole program's source code in a zip file
